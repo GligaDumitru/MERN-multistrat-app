@@ -7,7 +7,7 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 // create schema to validate
 const getEnvSchema = Joi.object()
   .keys({
-    NODE_ENV: Joi.string().valid("production", "development"),
+    NODE_ENV: Joi.string().valid("production", "development", "test"),
     PORT: Joi.number().default(5000),
     MONGODB_URL: Joi.string().required(),
   })
