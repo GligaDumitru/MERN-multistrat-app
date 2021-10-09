@@ -6,6 +6,7 @@ const xss = require("xss-clean");
 const httpStatus = require("http-status");
 const config = require("./config/getEnv");
 const morgan = require("./config/morgan");
+const routes = require("./routes/v1");
 const mongoSanitize = require("express-mongo-sanitize");
 const ApiError = require("./utils/ApiError");
 
@@ -36,6 +37,8 @@ app.use(mongoSanitize());
 
 app.use(cors());
 app.options("*", cors());
+
+app.use("/v1", routes);
 
 app.use((_, __, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, "Route Not Found"));

@@ -24,7 +24,7 @@ const convertToErrorMiddleware = (err, req, res, next) => {
 };
 
 const errorHandler = (err, req, res, next) => {
-  let { statusCode, message } = err;
+  let { statusCode, message, errors } = err;
 
   // in case there is not a statusCode or a messge
   if (!statusCode) {
@@ -40,6 +40,7 @@ const errorHandler = (err, req, res, next) => {
   const response = {
     code: statusCode,
     message,
+    ...(errors && errors.length > 0 && {errors}),
     ...(config.env === 'development' && { stack: err.stack }),
   };
 

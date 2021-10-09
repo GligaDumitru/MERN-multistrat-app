@@ -14,6 +14,37 @@ const getMockReq = () => httpMocks.createRequest();
 const getMockRes = () => httpMocks.createResponse();
 
 describe("Error for middlewares", () => {
+  describe("Test ApiError class", () => {
+    test("should have message, statusCode and stack if exist", () => {
+      const error = new ApiError(
+        httpStatus.BAD_REQUEST,
+        httpStatus[httpStatus.BAD_REQUEST],
+        [],
+        "stack here"
+      );
+      expect(error).toHaveProperty(
+        "message",
+        httpStatus[httpStatus.BAD_REQUEST]
+      );
+      expect(error).toHaveProperty("statusCode", httpStatus.BAD_REQUEST);
+      expect(error).toHaveProperty("stack", "stack here");
+    });
+    test("should have message, statusCode errors and stack if exist", () => {
+      const error = new ApiError(
+        httpStatus.BAD_REQUEST,
+        httpStatus[httpStatus.BAD_REQUEST],
+        ["Field required"],
+        "stack here"
+      );
+      expect(error).toHaveProperty(
+        "message",
+        httpStatus[httpStatus.BAD_REQUEST]
+      );
+      expect(error).toHaveProperty("statusCode", httpStatus.BAD_REQUEST);
+      expect(error).toHaveProperty("errors", ["Field required"]);
+      expect(error).toHaveProperty("stack", "stack here");
+    });
+  });
   describe("Test the middleware the convertes the Error to ApiError", () => {
     test("should return the same ApiError object that it was called with", () => {
       const error = new ApiError(httpStatus.BAD_REQUEST, "Error here");
@@ -140,6 +171,24 @@ describe("Error for middlewares", () => {
         })
       );
       config.env = process.env.NODE_ENV;
+    });
+
+    test("should put errors array in the error if exist", () => {
+      const error = new ApiError(httpStatus.BAD_REQUEST, "Error here", [
+        "Field is required",
+      ]);
+      const res = getMockRes();
+      const req = getMockReq();
+      const sendSpy = jest.spyOn(res, "send");
+
+      errorHandler(error, req, res);
+      expect(sendSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          code: error.statusCode,
+          message: error.message,
+          errors: error.errors,
+        })
+      );
     });
 
     test("should set the status code to 500 if there is no status code ", () => {
