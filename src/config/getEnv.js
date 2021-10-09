@@ -13,8 +13,7 @@ const getEnvSchema = Joi.object()
   })
   .unknown();
 
-const validateSchema = getEnvSchema
-  .validate(process.env);
+const validateSchema = getEnvSchema.validate(process.env);
 
 const { value: getEnvVars, error } = validateSchema;
 
@@ -26,7 +25,8 @@ module.exports = {
   env: getEnvVars.NODE_ENV,
   port: getEnvVars.PORT,
   mongoose: {
-    url: getEnvVars.MONGODB_URL,
+    url:
+      getEnvVars.MONGODB_URL + (getEnvVars.NODE_ENV === "test" ? "-test" : ""),
     options: {
       useNewUrlParser: true,
     },

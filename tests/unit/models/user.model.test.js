@@ -1,13 +1,13 @@
 const faker = require("faker");
 const bcrypt = require("bcrypt");
 const { User } = require("../../../src/models");
-const connectToDBForTests = require("../../../src/utils/setupTestForDB");
+const setupTestForDB = require("../../utils/setupTestForDB");
 const {
   userPreSaveHook,
   isPasswordMatchingFn,
 } = require("../../../src/models/user.model");
 
-connectToDBForTests();
+setupTestForDB();
 
 describe("Test User Model", () => {
   describe("Test isPasswordMatchingFn fn", () => {
