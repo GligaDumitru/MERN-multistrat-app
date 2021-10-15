@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minLength: 8,
+      minlength: 8,
       validate(value) {
         if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
           throw new Error(
@@ -92,6 +92,9 @@ const userPreSaveHook = async function (next) {
 // Encrypt pasword before saving the document
 userSchema.pre("save", userPreSaveHook);
 
+/**
+ * @typedef User
+ */
 const User = mongoose.model("User", userSchema);
 
 module.exports = {

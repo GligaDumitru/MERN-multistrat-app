@@ -34,6 +34,7 @@ module.exports = {
       getEnvVars.MONGODB_URL + (getEnvVars.NODE_ENV === "test" ? "-test" : ""),
     options: {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     },
   },
   jwt: {
