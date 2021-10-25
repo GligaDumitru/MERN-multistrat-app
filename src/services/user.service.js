@@ -18,8 +18,8 @@ const createUser = async (user) => {
  * Gel All Users
  * @returns {Promise<User>}
  */
-const getUSers = async () => {
-  const users = await User.findAll();
+const getUsers = async () => {
+  const users = await User.find({});
   return users;
 };
 
@@ -62,8 +62,8 @@ const updateUserById = async (userId, updatedBody) => {
     }
   }
   Object.assign(user, updatedBody);
-  await User.save();
-  return User;
+  await user.save();
+  return user;
 };
 
 /**
@@ -82,7 +82,7 @@ const deleteUserById = async (userId) => {
 
 module.exports = {
   createUser,
-  getUSers,
+  getUsers,
   getUserById,
   getUserByEmail,
   updateUserById,

@@ -1,11 +1,13 @@
 const express = require("express");
 const helmet = require("helmet");
+const passport = require("passport");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const xss = require("xss-clean");
 const httpStatus = require("http-status");
 const config = require("./config/getEnv");
 const morgan = require("./config/morgan");
+const { jwtStrategy } = require("./config/passport");
 const routes = require("./routes/v1");
 const mongoSanitize = require("express-mongo-sanitize");
 const ApiError = require("./utils/ApiError");
@@ -37,6 +39,15 @@ app.use(mongoSanitize());
 
 app.use(cors());
 app.options("*", cors());
+
+app.use(passport.initialize());
+passport.use("jwt", jwtStrategy);
+
+app.get("/", (req, res) => {
+  res.send({
+    message: "Welcome",
+  });
+});
 
 app.use("/v1", routes);
 

@@ -10,6 +10,14 @@ const customPasswordValidation = (value, helpers) => {
   return value;
 };
 
+const objectId = (value, helpers) => {
+  if(!value.match(/^[0-9a-fA-F]{24}$/)){
+    return helpers.message('The id is not a valid mongodb id')
+  }
+  return value;
+}
+
 module.exports = {
   customPasswordValidation,
+  objectId
 };

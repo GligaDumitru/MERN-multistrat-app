@@ -1,12 +1,17 @@
 const router = require("express").Router();
 const authRoute = require("./auth.route");
+const userRoute = require("./user.route");
 
 const routes = [
   {
     path: "/auth",
     route: authRoute,
   },
-  // TODO: create route for users
+  {
+    path: "/users",
+    route: userRoute,
+  },
+
   // TODO: create route for /docs on dev only
 ];
 
