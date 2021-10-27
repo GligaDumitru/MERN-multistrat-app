@@ -3,9 +3,8 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const { roleRights } = require("../config/roles");
 
-const verifyAuthCb =
+const verifyCallback =
   (req, resolve, reject, requiredRights) => async (err, user, info) => {
-    let userRights = [];
     // check respone from jwt verification
     if (err || info || !user) {
       return reject(
@@ -15,17 +14,19 @@ const verifyAuthCb =
         )
       );
     }
+    req.user = user;
+
     if (requiredRights.length) {
       // get user rights
-      userRights = roleRights.get(user.role);
+      let userRights = roleRights.get(user.role);
 
       // true || false
-      const hasRequiredRights = requiredRights.every((right) =>
-        userRights.includes(right)
+      const hasRequiredRights = requiredRights.every((requiredRight) =>
+        userRights.includes(requiredRight)
       );
 
       // if do not have enough rights and it is not for yourself reject error
-      if (!hasRequiredRights && req.params.id !== user.id) {
+      if (!hasRequiredRights && req.params.userId !== user.id) {
         let requiredRightsError = [...requiredRights]
           .filter((right) => !userRights.includes(right))
           .map((currentRight) => `The ${currentRight} right is required`);
@@ -38,21 +39,45 @@ const verifyAuthCb =
           )
         );
       }
-
-      resolve();
     }
+
+    resolve();
   };
 
-const auth = (requiredRights) => async (req, res, next) => {
-  return new Promise((resolve, reject) => {
-    passport.authenticate(
-      "jwt",
-      { session: false },
-      verifyAuthCb(req, resolve, reject, requiredRights)
-    )(req, res, next);
-  })
-    .then(() => next())
-    .catch((error) => next(error));
-};
+const verifyCallback2 =
+  (req, resolve, reject, requiredRights) => async (err, user, info) => {
+    if (err || info || !user) {
+      return reject(
+        new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate")
+      );
+    }
+    req.user = user;
+
+    if (requiredRights.length) {
+      const userRights = roleRights.get(user.role);
+      const hasRequiredRights = requiredRights.every((requiredRight) =>
+        userRights.includes(requiredRight)
+      );
+      if (!hasRequiredRights && req.params.userId !== user.id) {
+        return reject(new ApiError(httpStatus.FORBIDDEN, "Forbidden"));
+      }
+    }
+
+    resolve();
+  };
+
+const auth =
+  (...requiredRights) =>
+  async (req, res, next) => {
+    return new Promise((resolve, reject) => {
+      passport.authenticate(
+        "jwt",
+        { session: false },
+        verifyCallback(req, resolve, reject, requiredRights)
+      )(req, res, next);
+    })
+      .then(() => next())
+      .catch((err) => next(err));
+  };
 
 module.exports = auth;

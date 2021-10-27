@@ -5,6 +5,7 @@ const config = require("../config/getEnv");
 const Token = require("../models/token.model");
 const ApiError = require("../utils/ApiError");
 const tokenTypes = require("../config/token.type");
+const userService = require("./user.service");
 
 /**
  * Generate a token jwt based on userId and a secret
@@ -60,8 +61,24 @@ const verifyToken = async (token, type) => {
     user: payload.sub,
     blackListed: false,
   });
+
+  const tokenDocBlacklisted = await Token.findOne({
+    token,
+    type,
+    user: payload.sub,
+    blackListed: true,
+  });
+  if (tokenDocBlacklisted) {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      httpStatus[httpStatus.UNAUTHORIZED],
+      ["Token is blacklisted"]
+    );
+  }
   if (!tokenDoc) {
-    throw new ApiError("Token not found");
+    throw new ApiError(httpStatus.NOT_FOUND, httpStatus[httpStatus.NOT_FOUND], [
+      "Token not found in DB",
+    ]);
   }
   return tokenDoc;
 };
@@ -113,9 +130,58 @@ const generateAuthTokens = async (user) => {
   };
 };
 
+/**
+ * Generate reset password token
+ * @param {string} email
+ * @returns {Promise<string>}
+ */
+const generateResetPasswordToken = async (email) => {
+  const user = await userService.getUserByEmail(email);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No users found with this email");
+  }
+  const expires = moment().add(
+    config.jwt.resetPasswordExpirationMinutes,
+    "minutes"
+  );
+  const resetPasswordToken = generateToken(
+    user.id,
+    expires,
+    tokenTypes.RESET_PASSWORD
+  );
+  await saveToken(
+    resetPasswordToken,
+    user.id,
+    expires,
+    tokenTypes.RESET_PASSWORD
+  );
+  return resetPasswordToken;
+};
+
+/**
+ * Generate verify email token
+ * @param {User} user
+ * @returns {Promise<string>}
+ */
+const generateVerifyEmailToken = async (user) => {
+  const expires = moment().add(
+    config.jwt.verifyEmailExpirationMinutes,
+    "minutes"
+  );
+  const verifyEmailToken = generateToken(
+    user.id,
+    expires,
+    tokenTypes.VERIFY_EMAIL
+  );
+  await saveToken(verifyEmailToken, user.id, expires, tokenTypes.VERIFY_EMAIL);
+  return verifyEmailToken;
+};
+
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
+  generateResetPasswordToken,
+  generateVerifyEmailToken,
 };
