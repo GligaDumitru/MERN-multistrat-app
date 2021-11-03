@@ -6,4 +6,4 @@ MERN Stack App
 
 
 Documentatie:
-[https://docs.google.com/document/d/1z78KstzmGMsuoYd5gAnwCz0LBPccEcoNfvfjtdrBRnI/edit?usp=sharing](https://docs.google.com/document/d/1z78KstzmGMsuoYd5gAnwCz0LBPccEcoNfvfjtdrBRnI/edit?usp=sharing)
+[https://drive.google.com/drive/u/0/folders/1aitka9_av3enasJOvsbEyjxeQCyInFb2](https://drive.google.com/drive/u/0/folders/1aitka9_av3enasJOvsbEyjxeQCyInFb2)
