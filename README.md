@@ -6,4 +6,4 @@ MERN Stack App
 
 
 Documentatie:
-[Here](https://github.com/GligaDumitru/MERN-multistrat-app/documentatie/EMS-project.docx)
+[https://docs.google.com/document/d/1z78KstzmGMsuoYd5gAnwCz0LBPccEcoNfvfjtdrBRnI/edit?usp=sharing](https://docs.google.com/document/d/1z78KstzmGMsuoYd5gAnwCz0LBPccEcoNfvfjtdrBRnI/edit?usp=sharing)
