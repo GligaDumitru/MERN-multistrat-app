@@ -48,6 +48,13 @@ const updateUser = {
     email: Joi.string().email(),
     password: Joi.string().custom(customPasswordValidation),
     name: Joi.string(),
+    username: Joi.string(),
+    imageLink: Joi.string(),
+    address: Joi.string(),
+    city: Joi.string(),
+    country: Joi.string(),
+    postalCode: Joi.string(),
+    description: Joi.string(),
   }),
 };
 
@@ -63,5 +70,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  updateUserRole
+  updateUserRole,
 };

@@ -28,7 +28,7 @@ const getUserById = catchAsync(async (req, res) => {
 
 const updateUser = catchAsync(async (req, res) => {
   const user = await userService.updateUserById(req.params.id, req.body);
-  res.status(httpStatus.OK).send(user);
+  res.status(httpStatus.OK).send({user});
 });
 
 const deleteUser = catchAsync(async (req, res) => {

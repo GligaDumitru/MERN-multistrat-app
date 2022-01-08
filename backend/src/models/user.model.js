@@ -42,7 +42,38 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: "user",
     },
-
+    username: {
+      type: String,
+      default: "username",
+    },
+    imageLink: {
+      type: String,
+      default: "https://via.placeholder.com/150",
+    },
+    position: {
+      type: String,
+      default: "employee",
+    },
+    address: {
+      type: String,
+      default: "-",
+    },
+    city: {
+      type: String,
+      default: "-",
+    },
+    country: {
+      type: String,
+      default: "-",
+    },
+    postalCode: {
+      type: String,
+      default: "-",
+    },
+    description: {
+      type: String,
+      default: "-",
+    },
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -100,5 +131,5 @@ const User = mongoose.model("User", userSchema);
 module.exports = {
   User,
   userPreSaveHook,
-  isPasswordMatchingFn
+  isPasswordMatchingFn,
 };

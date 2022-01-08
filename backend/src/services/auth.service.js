@@ -20,8 +20,9 @@ const loginWithEmailAndPassword = async (email, password) => {
 
   if (!isPasswordMatch) {
     throw new ApiError(
-      httpStatus.UNAUTHORIZED,
-      httpStatus[httpStatus.UNAUTHORIZED]
+      httpStatus.BAD_REQUEST,
+      httpStatus[httpStatus.BAD_REQUEST],
+      ["Email or password incorrect"]
     );
   }
   return user;
@@ -65,8 +66,6 @@ const refreshAuth = async (refreshToken) => {
     await refreshTokenDoc.remove();
     return tokenService.generateAuthTokens(user);
   } catch (error) {
-    console.log(error.statusCode, error.message)
-    // console.log("typeof error ",error,typeof error, JSON.stringify(error) )
     throw new ApiError(
       error.statusCode || httpStatus.UNAUTHORIZED,
       error.message || httpStatus[httpStatus.UNAUTHORIZED]
@@ -93,7 +92,10 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     await userService.updateUserById(user.id, { password: newPassword });
     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      error.message || "Password reset failed"
+    );
   }
 };
 

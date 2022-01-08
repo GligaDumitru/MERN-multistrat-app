@@ -3,7 +3,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     height: {
-      500: '500px'
+      500: "500px",
     },
     fontFamily: {
       sans: ["Roboto", "sans-serif"],
@@ -11,6 +11,9 @@ module.exports = {
       body: ["Roboto", "sans-serif"],
     },
     extend: {
+      maxHeight: {
+        128: "32rem",
+      },
       backgroundImage: () => ({
         "login-background":
           "linear-gradient(rgba(0,0,0, 0.75), rgba(0,0,0, 0.75)), url('/src/assets/img/background-1920x1280.jpg')",
