@@ -145,11 +145,15 @@ const EditTimesheet = ({
   const { startDate, tasks } = timesheet;
   const daysForTimesheetHeader = generateDaysArr(startDate);
   const totalHoursPerColumn = calculateTotalHoursPerColumn(tasks);
-  const totalHours = totalHoursPerColumn.reduce((a, b) => a + b, 0);
 
-  const getProjectById = (id) => projects.find((project) => project.id === id);
+  const getSumArr = (arr) => arr.reduce((a, b) => a + Number(b), 0);
+  const getFieldFromArrObjsByValue = (arr, fieldName, value) =>
+    arr.find((arrItem) => arrItem[fieldName] === value);
+
   const getSubtaskByLabel = (subtasks, label) =>
     subtasks.find((subtask) => subtask.label === label);
+
+  const totalHours = getSumArr(totalHoursPerColumn);
 
   return (
     <div className="mt-16">
@@ -204,10 +208,7 @@ const EditTimesheet = ({
                   </thead>
                   <tbody className="bg-white">
                     {tasks.map(
-                      (
-                        { days: daysForTask, hours, projectId, subtaskId },
-                        idx
-                      ) => (
+                      ({ days: daysForTask, projectId, subtaskId }, idx) => (
                         <tr
                           key={idx}
                           className={`${
@@ -221,7 +222,11 @@ const EditTimesheet = ({
                               options={projects}
                               selected={
                                 projectId
-                                  ? getProjectById(projectId)
+                                  ? getFieldFromArrObjsByValue(
+                                      projects,
+                                      "id",
+                                      projectId
+                                    )
                                   : { name: "Select..." }
                               }
                               onSelect={(project) =>
@@ -233,13 +238,22 @@ const EditTimesheet = ({
                             <Select
                               options={
                                 projectId
-                                  ? getProjectById(projectId).subtasks
+                                  ? getFieldFromArrObjsByValue(
+                                      projects,
+                                      "id",
+                                      projectId
+                                    ).subtasks
                                   : []
                               }
                               selected={
                                 subtaskId && projectId
-                                  ? getSubtaskByLabel(
-                                      getProjectById(projectId).subtasks,
+                                  ? getFieldFromArrObjsByValue(
+                                      getFieldFromArrObjsByValue(
+                                        projects,
+                                        "id",
+                                        projectId
+                                      ).subtasks,
+                                      "label",
                                       subtaskId
                                     )
                                   : { name: "Select..." }
@@ -263,7 +277,7 @@ const EditTimesheet = ({
                             </td>
                           ))}
                           <td className="px-1 py-4 text-center">
-                            <span>{hours}</span>
+                            <span>{getSumArr(daysForTask)}</span>
                           </td>
                           <td className="px-1 py-4 text-center w-24">
                             <Button
@@ -370,21 +384,7 @@ EditTimesheet.defaultProps = {
   onSave: () => undefined,
   timesheet: {
     startDate: new Date(2022, 0, 17),
-    totalHours: 40,
-    tasks: [
-      {
-        projectId: "11111",
-        subtaskId: "frontend_development",
-        days: [4, 8, 8, null, 4, null, null],
-        hours: 8,
-      },
-      {
-        projectId: "11111",
-        subtaskId: "backend_development",
-        days: [4, null, null, 8, 4, null, null],
-        hours: null,
-      },
-    ],
+    tasks: [],
   },
 };
 
