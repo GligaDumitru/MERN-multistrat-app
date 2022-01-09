@@ -10,6 +10,7 @@ import Header from "../profile/Header";
 import Breadcrumb from "../shared/Breadcrumb";
 import LoadingContainer from "../shared/LoadingContainer";
 import EditTimesheet from "./EditTimesheet";
+import TimesheetDetails from "./TimesheetDetails";
 
 const ViewTimesheet = () => {
   const { id = null } = useParams();
@@ -161,6 +162,12 @@ const ViewTimesheet = () => {
     alert(submit ? "Save and submit" : "Only save for later");
   };
 
+  const STATUS = {
+    OPEN: "open",
+    SUBMITED: "submitted",
+    APPROVED: "approved",
+  };
+
   return (
     <>
       <div className="absolute w-full z-20">
@@ -173,15 +180,29 @@ const ViewTimesheet = () => {
             <div className="p-8">
               <Breadcrumb routes={routesBreadcrumb} />
               {values.timesheet?.tasks && (
-                <EditTimesheet
-                  timesheet={values.timesheet}
-                  onChangeInput={handleOnChangeHourDay}
-                  onDeleteRow={handleDeleteRow}
-                  onAddRow={handleAddRow}
-                  onSelectProject={handleOnSelectProjectId}
-                  onSelectSubtask={handleOnSelectSubtask}
-                  onSave={handleOnSave}
-                />
+                <>
+                  {values.timesheet.status === STATUS.OPEN ? (
+                    <EditTimesheet
+                      timesheet={values.timesheet}
+                      onChangeInput={handleOnChangeHourDay}
+                      onDeleteRow={handleDeleteRow}
+                      onAddRow={handleAddRow}
+                      onSelectProject={handleOnSelectProjectId}
+                      onSelectSubtask={handleOnSelectSubtask}
+                      onSave={handleOnSave}
+                    />
+                  ) : (
+                    <TimesheetDetails
+                      timesheet={values.timesheet}
+                      onChangeInput={handleOnChangeHourDay}
+                      onDeleteRow={handleDeleteRow}
+                      onAddRow={handleAddRow}
+                      onSelectProject={handleOnSelectProjectId}
+                      onSelectSubtask={handleOnSelectSubtask}
+                      onSave={handleOnSave}
+                    />
+                  )}
+                </>
               )}
             </div>
           </LoadingContainer>

@@ -133,7 +133,7 @@ const calculateTotalHoursPerColumn = (tasks) => {
   }, []);
 };
 
-const EditTimesheet = ({
+const TimesheetDetails = ({
   timesheet,
   onChangeInput,
   onAddRow,
@@ -156,7 +156,7 @@ const EditTimesheet = ({
     <div className="mt-16">
       <CardHeader color="blue" contentPosition="none">
         <div className="w-full flex items-center justify-between">
-          <h2 className="text-white text-2xl">Edit Timesheet</h2>
+          <h2 className="text-white text-2xl">Timesheet Details</h2>
           <h2 className="text-white text-2xl uppercase">{status}</h2>
         </div>
       </CardHeader>
@@ -196,12 +196,6 @@ const EditTimesheet = ({
                       >
                         Total
                       </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-center text-xs font-medium text-gray-500 uppercase"
-                      >
-                        Options
-                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white">
@@ -216,78 +210,42 @@ const EditTimesheet = ({
                           }`}
                         >
                           <td className="px-1 py-4">
-                            <Select
-                              options={projects}
-                              selected={
-                                projectId
-                                  ? getFieldFromArrObjsByValue(
-                                      projects,
-                                      "id",
-                                      projectId
-                                    )
-                                  : { name: "Select..." }
-                              }
-                              onSelect={(project) =>
-                                onSelectProject(idx, project)
-                              }
-                            />
+                            <span>
+                              {projectId
+                                ? getFieldFromArrObjsByValue(
+                                    projects,
+                                    "id",
+                                    projectId
+                                  ).name
+                                : "-"}
+                            </span>
                           </td>
                           <td className="px-1 py-4">
-                            <Select
-                              options={
-                                projectId
-                                  ? getFieldFromArrObjsByValue(
+                            <span>
+                              {subtaskId && projectId
+                                ? getFieldFromArrObjsByValue(
+                                    getFieldFromArrObjsByValue(
                                       projects,
                                       "id",
                                       projectId
-                                    ).subtasks
-                                  : []
-                              }
-                              selected={
-                                subtaskId && projectId
-                                  ? getFieldFromArrObjsByValue(
-                                      getFieldFromArrObjsByValue(
-                                        projects,
-                                        "id",
-                                        projectId
-                                      ).subtasks,
-                                      "label",
-                                      subtaskId
-                                    )
-                                  : { name: "Select..." }
-                              }
-                              onSelect={(subtask) =>
-                                onSelectSubtask(idx, subtask)
-                              }
-                            />
+                                    ).subtasks,
+                                    "label",
+                                    subtaskId
+                                  ).name
+                                : "-"}
+                            </span>
                           </td>
                           {daysForTask.map((nrHoursPerDay, index) => (
                             <td key={index} className="px-1 py-4 text-center">
-                              <input
-                                type="number"
-                                min="0"
-                                name={`day-${idx}-${index}`}
-                                onChange={onChangeInput}
-                                value={nrHoursPerDay}
-                                max="8"
-                                className="text-center w-12 border border-gray-400 rounded-lg inline-block p-2"
-                              />
+                              {Number(nrHoursPerDay) === 0 ? (
+                                <span className="text-gray-500">0</span>
+                              ) : (
+                                <span>{Number(nrHoursPerDay).toFixed(2)}</span>
+                              )}
                             </td>
                           ))}
                           <td className="px-1 py-4 text-center">
-                            <span>{getSumArr(daysForTask)}</span>
-                          </td>
-                          <td className="px-1 py-4 text-center w-24">
-                            <Button
-                              color="red"
-                              ripple="light"
-                              rounded={true}
-                              iconOnly={true}
-                              onClick={() => onDeleteRow(idx)}
-                              className="m-0 p-1 h-8 w-8"
-                            >
-                              <Icon name="delete" size="xs" />
-                            </Button>
+                            <span>{getSumArr(daysForTask)}h</span>
                           </td>
                         </tr>
                       )
@@ -309,57 +267,17 @@ const EditTimesheet = ({
                         <th
                           key={index}
                           scope="col"
-                          className="px-1 py-3 text-center  font-medium text-dark uppercase"
+                          className="px-1 py-3 text-center  font-medium text-dark"
                         >
-                          {totalHoursPerColumn[index]}
+                          {totalHoursPerColumn[index]}h
                         </th>
                       ))}
 
                       <th
                         scope="col"
-                        className="px-6 py-3 text-center  font-medium text-dark uppercase"
+                        className="px-6 py-3 text-center  font-medium text-dark"
                       >
-                        <span>{totalHours}</span>
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center  font-medium text-dark uppercase"
-                      >
-                        <div className="flex items-center justify-center m-0 p-0">
-                          <Button
-                            color="lightBlue"
-                            ripple="light"
-                            rounded={true}
-                            iconOnly={true}
-                            className="m-0 p-1 h-8 w-8 mr-2"
-                            onClick={onAddRow}
-                            title="Add New Row"
-                          >
-                            <Icon name="add" />
-                          </Button>
-                          <Button
-                            color="lightGreen"
-                            ripple="light"
-                            rounded={true}
-                            iconOnly={true}
-                            className="m-0 p-1 h-8 w-8 mr-2"
-                            onClick={() => onSave({ submit: false })}
-                            title="Save"
-                          >
-                            <Icon name="check" />
-                          </Button>
-                          <Button
-                            color="green"
-                            ripple="light"
-                            rounded={true}
-                            iconOnly={true}
-                            className="m-0 p-1 h-8 w-8"
-                            title="Save & Submit"
-                            onClick={() => onSave({ submit: true })}
-                          >
-                            <Icon name="send" />
-                          </Button>
-                        </div>
+                        <span>{totalHours}h</span>
                       </th>
                     </tr>
                   </thead>
@@ -373,7 +291,7 @@ const EditTimesheet = ({
   );
 };
 
-EditTimesheet.defaultProps = {
+TimesheetDetails.defaultProps = {
   onChangeInput: () => undefined,
   onAddRow: () => undefined,
   onDeleteRow: () => undefined,
@@ -383,7 +301,8 @@ EditTimesheet.defaultProps = {
   timesheet: {
     startDate: new Date(2022, 0, 17),
     tasks: [],
+    status: "Approved",
   },
 };
 
-export default EditTimesheet;
+export default TimesheetDetails;
