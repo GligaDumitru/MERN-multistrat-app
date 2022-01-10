@@ -2,11 +2,18 @@ const httpStatus = require("http-status");
 const _ = require("lodash");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
-const { userService } = require("../services");
+const { userService, tokenService, emailService } = require("../services");
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   res.status(httpStatus.CREATED).send(user);
+});
+
+const createEmployee = catchAsync(async (req, res) => {
+  const user = await userService.createUser(req.body);
+  const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
+  await emailService.sendVerificationEmail(user.email, verifyEmailToken);
+  res.status(httpStatus.CREATED).send({ user, verifyEmailSent: true });
 });
 
 const getUsers = catchAsync(async (req, res) => {
@@ -28,7 +35,7 @@ const getUserById = catchAsync(async (req, res) => {
 
 const updateUser = catchAsync(async (req, res) => {
   const user = await userService.updateUserById(req.params.id, req.body);
-  res.status(httpStatus.OK).send({user});
+  res.status(httpStatus.OK).send({ user });
 });
 
 const deleteUser = catchAsync(async (req, res) => {
@@ -38,6 +45,7 @@ const deleteUser = catchAsync(async (req, res) => {
 
 module.exports = {
   createUser,
+  createEmployee,
   getUsers,
   getUserById,
   updateUser,

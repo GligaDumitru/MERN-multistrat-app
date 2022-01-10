@@ -42,9 +42,10 @@ const userSchema = mongoose.Schema(
       enum: roles,
       default: "user",
     },
-    username: {
-      type: String,
-      default: "username",
+    managedBy: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "User",
+      default: null,
     },
     imageLink: {
       type: String,

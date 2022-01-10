@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const authRoute = require("./auth.route");
 const userRoute = require("./user.route");
+const projectRoute = require("./project.route");
 const docsRoute = require('./docs.route');
 const config = require('../../config/getEnv');
 
@@ -12,6 +13,10 @@ const routes = [
   {
     path: "/users",
     route: userRoute,
+  },
+  {
+    path: "/projects",
+    route: projectRoute,
   },
 ];
 

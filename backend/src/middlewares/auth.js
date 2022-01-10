@@ -5,7 +5,6 @@ const { roleRights } = require("../config/roles");
 
 const verifyCallback =
   (req, resolve, reject, requiredRights) => async (err, user, info) => {
-    // check respone from jwt verification
     if (err || info || !user) {
       return reject(
         new ApiError(
@@ -26,7 +25,7 @@ const verifyCallback =
       );
 
       // if do not have enough rights and it is not for yourself reject error
-      if (!hasRequiredRights && req.params.userId !== user.id) {
+      if (!hasRequiredRights && req.params.id !== user.id) {
         let requiredRightsError = [...requiredRights]
           .filter((right) => !userRights.includes(right))
           .map((currentRight) => `The ${currentRight} right is required`);
@@ -38,28 +37,6 @@ const verifyCallback =
             requiredRightsError
           )
         );
-      }
-    }
-
-    resolve();
-  };
-
-const verifyCallback2 =
-  (req, resolve, reject, requiredRights) => async (err, user, info) => {
-    if (err || info || !user) {
-      return reject(
-        new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate")
-      );
-    }
-    req.user = user;
-
-    if (requiredRights.length) {
-      const userRights = roleRights.get(user.role);
-      const hasRequiredRights = requiredRights.every((requiredRight) =>
-        userRights.includes(requiredRight)
-      );
-      if (!hasRequiredRights && req.params.userId !== user.id) {
-        return reject(new ApiError(httpStatus.FORBIDDEN, "Forbidden"));
       }
     }
 
