@@ -4,22 +4,6 @@ const bcrypt = require("bcrypt");
 const { roles } = require("../config/roles");
 const toJSON = require("./plugins/toJSON.plugin");
 
-const subtaskSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  createAt: {
-    type: Date,
-    default: new Date(),
-  },
-  updatedAt: {
-    type: Date,
-    default: new Date(),
-  },
-});
-
 const projectSchema = mongoose.Schema(
   {
     name: {
@@ -45,7 +29,23 @@ const projectSchema = mongoose.Schema(
       required: true,
     },
     subtasks: {
-      type: [subtaskSchema],
+      type: [
+        {
+          name: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+          createdAt: {
+            type: Date,
+            default: "",
+          },
+          updatedAt: {
+            type: Date,
+            default: "",
+          },
+        },
+      ],
       default: [],
     },
   },
@@ -55,7 +55,6 @@ const projectSchema = mongoose.Schema(
 );
 
 projectSchema.plugin(toJSON);
-subtaskSchema.plugin(toJSON);
 
 /**
  *

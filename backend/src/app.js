@@ -45,7 +45,7 @@ passport.use("jwt", jwtStrategy);
 
 app.get("/", (req, res) => {
   res.send({
-    message: "Welcome",
+    message: "Welcome to EMS API",
   });
 });
 

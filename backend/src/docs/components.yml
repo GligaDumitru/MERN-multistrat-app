@@ -18,7 +18,69 @@ components:
         email: fake@example.com
         name: fake name
         role: user
-
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        imageLink:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        managedBy:
+          type: string
+        subtasks:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+      example:
+        id: 5ebac534954b54139806c112
+        managedBy: 5ebac534954b54139806c112
+        name: Project Name
+        imageLink: wwww.placeholder.com/500
+        address: Iasi, Romania
+        description: description here
+        subtasks: [{ "name": "frontend_development" }]
+    Timesheet:
+      type: object
+      properties:
+        id:
+          type: string
+        startDate:
+          type: string
+        userId:
+          type: string
+        managedBy:
+          type: string
+        status:
+          type: string
+        tasks:
+          type: array
+          items:
+            type: object
+            properties:
+              projectId:
+                type: string
+              subtaskId:
+                type: string
+              days:
+                type: array
+                items:
+                  type: string
+      example:
+        id: 5ebac534954b54139806c112
+        managedBy: 5ebac534954b54139806c112
+        startDate: 03/01/2022
+        userId: 5ebac534954b54139806c112
+        status: open
+        tasks: [{ "projectId": "5ebac534954b54139806c112", "subtaskId":"frontend_development", "days":["0", "0"] }]
     Token:
       type: object
       properties:
@@ -35,9 +97,9 @@ components:
       type: object
       properties:
         access:
-          $ref: '#/components/schemas/Token'
+          $ref: "#/components/schemas/Token"
         refresh:
-          $ref: '#/components/schemas/Token'
+          $ref: "#/components/schemas/Token"
 
     Error:
       type: object
@@ -53,16 +115,25 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             code: 400
             message: Email already taken
+    DuplicateNameProject:
+      description: Project name already taken
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: 400
+            message: Name already taken
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             code: 401
             message: Please authenticate
@@ -71,7 +142,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             code: 403
             message: Forbidden
@@ -80,7 +151,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             code: 404
             message: Not found

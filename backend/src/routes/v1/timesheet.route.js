@@ -1,52 +1,53 @@
 const router = require("express").Router();
 const auth = require("../../middlewares/auth");
 const validate = require("../../middlewares/validate");
-const projectValidation = require("../../validations/project.validation");
-const projectController = require("../../controllers/project.controller");
+const timesheetValidation = require("../../validations/timesheet.validation");
+const timesheetController = require("../../controllers/timesheet.controller");
 const { ROLES_DEFINITION } = require("../../config/roles");
 
 router
   .route("/")
-  .get(auth(ROLES_DEFINITION.GET_PROJECTS), projectController.getProjects)
+  .get(auth(ROLES_DEFINITION.GET_PROJECTS), timesheetController.getTimesheets)
   .post(
     auth(ROLES_DEFINITION.CREATE_PROJECT),
-    validate(projectValidation.createProject),
-    projectController.createProject
+    validate(timesheetValidation.createTimesheet),
+    timesheetController.createTimesheet
   );
 
 router
   .route("/:id")
   .get(
     auth(ROLES_DEFINITION.GET_PROJECTS),
-    validate(projectValidation.getProject),
-    projectController.getProjectById
+    validate(timesheetValidation.getTimesheet),
+    timesheetController.getTimesheetById
   )
   .patch(
     auth(ROLES_DEFINITION.UPDATE_PROJECT),
-    validate(projectValidation.updateProject),
-    projectController.updateProject
+    validate(timesheetValidation.updateTimesheet),
+    timesheetController.updateTimesheet
   )
   .delete(
     auth(ROLES_DEFINITION.DELETE_PROJECT),
-    validate(projectValidation.deleteProject),
-    projectController.deleteProject
+    validate(timesheetValidation.deleteTimesheet),
+    timesheetController.deleteTimesheet
   );
 
 module.exports = router;
+
 
 /**
  * @swagger
  * tags:
  *  name: Projects
- *  description: CRUD operation on project schema
+ *  description: CRUD operation on timesheet schema
  */
 /**
  * @swagger
- * /projects:
+ * /timesheets:
  *   post:
- *    summary: Create new project
- *    description: Only users that have create_project permission can do this.It's used for creating a new project from api
- *    tags: [Projects]
+ *    summary: Create new timesheet
+ *    description: Only users that have create_timesheet permission can do this.It's used for creating a new timesheet from api
+ *    tags: [Timesheets]
  *    security:
  *      - bearerAuth: []
  *    requestBody:
@@ -56,41 +57,45 @@ module.exports = router;
  *          schema:
  *            type: object
  *            required:
- *               - name
+ *               - startDate
  *               - managedBy
+ *               - userId
  *            properties:
  *              managedBy:
  *                type: string
  *                description: mongoose.ObjectId
- *              name:
+ *              userId:
  *                type: string
- *              imageLink:
+ *              startDate:
  *                type: string
- *              description:
+ *              status:
  *                type: string
- *              address:
- *                type: string
- *              subtasks:
+ *              tasks:
  *                type: array
  *                items:
  *                  type: object
  *                  properties:
- *                    name:
+ *                    projectId:
  *                      type: string
+ *                    subtaskId:
+ *                      type: string
+ *                    days:
+ *                      type: array
+ *                      items:
+ *                        type: string
  *            example:
- *                name: Project Name
- *                imageLink: www.placeholder.com/500
- *                description: this a Description
- *                address: Iasi, Romania
+ *                startDate: 03/01/2022
+ *                userId: 618964ab5a4756ae27956fab
+ *                status: open
  *                managedBy: 618964ab5a4756ae27956fab
- *                subtasks: [{"name":"fronted development"}]
+ *                tasks: [{"projectId":"618964ab5a4756ae27956fab", "subtaskId": "fronted", "days":["0", "0"]}]
  *    responses:
  *      "201":
  *        description: Project Created Successfully
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Project'
+ *              $ref: '#/components/schemas/Timesheet'
  *      "400":
  *         $ref: '#/components/responses/DuplicateNameProject'
  *      "401":
@@ -98,9 +103,9 @@ module.exports = router;
  *      "403":
  *         $ref: '#/components/responses/Forbidden'
  *   get:
- *      summary: Get all projects
- *      description: Only users that have get_projects permission can do this.
- *      tags: [Projects]
+ *      summary: Get all timesheets
+ *      description: Only users that have get_timesheets permission can do this.
+ *      tags: [Timesheets]
  *      security:
  *        - bearerAuth: []
  *      responses:
@@ -114,7 +119,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Project'
+ *                     $ref: '#/components/schemas/Timesheet'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -122,11 +127,11 @@ module.exports = router;
  */
 /**
  * @swagger
- * /projects/{id}:
+ * /timesheets/{id}:
  *   get:
- *     summary: Get a project
- *     description: Only users that have get_projects permission can do this.
- *     tags: [Projects]
+ *     summary: Get a timesheet
+ *     description: Only users that have get_timesheets permission can do this.
+ *     tags: [Timesheets]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -142,7 +147,7 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Project'
+ *                $ref: '#/components/schemas/Timesheet'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -151,9 +156,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a project
- *     description: Only users that have update_projects permission can do this.
- *     tags: [Projects]
+ *     summary: Update a timesheet
+ *     description: Only users that have update_timesheets permission can do this.
+ *     tags: [Timesheets]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -192,19 +197,19 @@ module.exports = router;
  *                     name:
  *                       type: string
  *             example:
- *                 name: Project Name
- *                 imageLink: www.placeholder.com/500
- *                 description: this a Description
- *                 address: Iasi, Romania
- *                 managedBy: 618964ab5a4756ae27956fab
- *                 subtasks: [{"name":"fronted development"}]
+ *                 id: 5ebac534954b54139806c112
+ *                 managedBy: 5ebac534954b54139806c112
+ *                 startDate: 03/01/2022
+ *                 userId: 5ebac534954b54139806c112
+ *                 status: open
+ *                 tasks: [{ "projectId": "5ebac534954b54139806c112", "subtaskId":"frontend_development", "days":["0", "0"] }]
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Project'
+ *                $ref: '#/components/schemas/Timesheet'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -214,9 +219,9 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *   delete:
- *     summary: Delete a project
- *     description: Only users that have delete_projects permission can do this.
- *     tags: [Projects]
+ *     summary: Delete a timesheet
+ *     description: Only users that have delete_timesheets permission can do this.
+ *     tags: [Timesheets]
  *     security:
  *       - bearerAuth: []
  *     parameters:

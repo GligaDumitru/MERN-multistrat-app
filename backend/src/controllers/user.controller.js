@@ -40,7 +40,7 @@ const updateUser = catchAsync(async (req, res) => {
 
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.id);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(httpStatus.OK).send({});
 });
 
 module.exports = {

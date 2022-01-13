@@ -13,8 +13,9 @@ const createProject = {
       .items(
         Joi.object({
           name: Joi.string().required(),
-          createAt: Joi.string(),
+          createdAt: Joi.string(),
           updatedAt: Joi.string(),
+          _id: Joi.string().custom(objectId),
         })
       )
       .required(),
@@ -40,9 +41,10 @@ const updateProject = {
     subtasks: Joi.array()
       .items(
         Joi.object({
-          name: Joi.number().required(),
-          createAt: Joi.string(),
+          name: Joi.string().required(),
+          createdAt: Joi.string(),
           updatedAt: Joi.string(),
+          _id: Joi.string().custom(objectId),
         })
       )
       .required(),
