@@ -30,6 +30,9 @@ const CurrentUserDropdown = () => {
       buttonType="link"
       buttonText={
         <div className="py-2.5 font-medium flex items-center">
+          <div className="p-1 border border-gray-100 m-1 rounded-lg">
+            {user?.role.toLowerCase()}
+          </div>
           <div className="w-12">
             <Image src={user?.imageLink} rounded />
           </div>

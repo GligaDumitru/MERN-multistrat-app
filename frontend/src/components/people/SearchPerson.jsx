@@ -1,33 +1,16 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import Icon from "@material-tailwind/react/Icon";
+import { Button } from "gpl-tailwind-theme";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deletePerson,
+  getPeople,
+  selectState,
+} from "../../features/auth/authSlice";
 import Modal from "../Modal";
 import ProfileCard from "../ProfileCard";
-
-const users = [
-  {
-    name: "Angela",
-    logo: "https://via.placeholder.com/350x350",
-  },
-  {
-    name: "Ana",
-    logo: "https://via.placeholder.com/350x350",
-  },
-  {
-    name: "Banana",
-    logo: "https://via.placeholder.com/350x350",
-  },
-  {
-    name: "Amana",
-    logo: "https://via.placeholder.com/350x350",
-  },
-  {
-    name: "daniel",
-    logo: "https://via.placeholder.com/350x350",
-  },
-  {
-    name: "Mihai",
-    logo: "https://via.placeholder.com/350x350",
-  },
-];
+import LoadingContainer from "../shared/LoadingContainer";
 
 const createArrayOfAlphabeticallyGrouped = (data) => {
   return Object.entries(
@@ -45,15 +28,15 @@ const createArrayOfAlphabeticallyGrouped = (data) => {
 
 const RenderItem = ({
   name = "Name Here",
-  logo = "https://via.placeholder.com/350x350",
+  imageLink = "https://via.placeholder.com/350x350",
   onClick,
 }) => {
   return (
     <li
       onClick={onClick}
-      className="flex items-center p-2 ml-4 mb-2 border border-gray-100 rounded-lg hover:bg-gray-100 cursor-pointer"
+      className="flex items-center p-2 ml-4 mb-2 border border-gray-100 rounded-lg hover:bg-gray-100 cursor-pointer w-full"
     >
-      <img src={logo} alt={name} className="w-8 h-8 rounded-full" />
+      <img src={imageLink} alt={name} className="w-8 h-8 rounded-full" />
       <span className="inline-block pl-2">{name}</span>
     </li>
   );
@@ -62,14 +45,25 @@ const RenderItem = ({
 const SearchPerson = () => {
   const [user, setUser] = useState("");
   const [selectUser, setSelectUser] = useState({});
-  const result = createArrayOfAlphabeticallyGrouped(users);
+  const { people = [] } = useSelector(selectState);
+  const dispatch = useDispatch();
+  const result = createArrayOfAlphabeticallyGrouped(people);
   const [showModal, setShowModal] = useState(false);
   const handleOnChangeInput = (e) => {
     e.preventDefault();
     setUser(e.target.value);
   };
+
+  useEffect(() => {
+    dispatch(getPeople());
+  }, [dispatch]);
+
+  const handleDelete = (id) => {
+    dispatch(deletePerson(id));
+  };
+
   return (
-    <>
+    <LoadingContainer>
       <div className="relative">
         <input
           type="text"
@@ -92,17 +86,30 @@ const SearchPerson = () => {
                     .toLowerCase()
                     .includes(user.toLowerCase());
                   return showEl ? (
-                    <RenderItem
-                      onClick={() => {
-                        setSelectUser({
-                          ...selectUser,
-                          ...lU,
-                        });
-                        setShowModal(true);
-                      }}
-                      key={idx}
-                      {...lU}
-                    />
+                    <div className="flex justify-between items-center">
+                      <RenderItem
+                        onClick={() => {
+                          setSelectUser({
+                            ...selectUser,
+                            ...lU,
+                          });
+                          setShowModal(true);
+                        }}
+                        key={idx}
+                        {...lU}
+                      />
+                      <Button
+                        iconOnly
+                        rounded
+                        className="m-0 ml-2 p-1 h-8 w-8"
+                        color="red"
+                        ripple="light"
+                        size="xs"
+                        onClick={() => handleDelete(lU.id)}
+                      >
+                        <Icon name="delete" size="xs" />
+                      </Button>
+                    </div>
                   ) : null;
                 })}
               </ul>
@@ -110,7 +117,7 @@ const SearchPerson = () => {
           );
         })}
       </div>
-    </>
+    </LoadingContainer>
   );
 };
 

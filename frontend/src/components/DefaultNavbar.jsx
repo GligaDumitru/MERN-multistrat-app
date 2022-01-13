@@ -16,6 +16,11 @@ import CurrentUserDropdown from "./CurrentUserDropdown";
 
 const LoggedInLinks = [
   {
+    to: "/requests",
+    name: "Requests",
+    icon: "add_task",
+  },
+  {
     to: "/timesheets",
     name: "Timesheets",
     icon: "access_time",

@@ -75,41 +75,41 @@ export default function DefaultFooter() {
                   <ul className="list-unstyled">
                     <li>
                       <a
-                        href="/"
+                        href="/people"
                         target="_blank"
                         rel="noreferrer"
                         className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
                       >
-                        About Us
+                        People
                       </a>
                     </li>
                     <li>
                       <a
                         className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
                         target="_blank"
-                        href="/"
+                        href="/projects"
                       >
-                        Blog
+                        Projects
                       </a>
                     </li>
                     <li>
                       <a
-                        href="/"
+                        href="/timesheets"
                         target="_blank"
                         rel="noreferrer"
                         className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
                       >
-                        Github
+                        Timesheets
                       </a>
                     </li>
                     <li>
                       <a
-                        href="/"
+                        href="/requests"
                         target="_blank"
                         rel="noreferrer"
                         className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
                       >
-                        Free Products
+                        Requests
                       </a>
                     </li>
                   </ul>
@@ -121,12 +121,12 @@ export default function DefaultFooter() {
                   <ul className="list-unstyled">
                     <li>
                       <a
-                        href="/"
+                        href="/profile"
                         target="_blank"
                         rel="noreferrer"
                         className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
                       >
-                        MIT License
+                        Profile
                       </a>
                     </li>
                     <li>
@@ -136,7 +136,17 @@ export default function DefaultFooter() {
                         rel="noreferrer"
                         className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
                       >
-                        Contribute
+                        Source Code
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="/settings"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
+                      >
+                        Settings
                       </a>
                     </li>
                     <li>
@@ -146,17 +156,7 @@ export default function DefaultFooter() {
                         rel="noreferrer"
                         className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
                       >
-                        Code of Conduct
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-gray-700 hover:text-gray-900 block pb-2 text-sm"
-                      >
-                        Contact Us
+                        Home
                       </a>
                     </li>
                   </ul>

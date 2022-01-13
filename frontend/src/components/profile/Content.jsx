@@ -3,6 +3,7 @@ import Image from "@material-tailwind/react/Image";
 import H3 from "@material-tailwind/react/Heading3";
 import Icon from "@material-tailwind/react/Icon";
 import LeadText from "@material-tailwind/react/LeadText";
+import { useHistory } from "react-router-dom";
 
 const Content = ({ user }) => {
   const {
@@ -16,12 +17,11 @@ const Content = ({ user }) => {
     position,
     companyName,
     manager,
-    phoneNumber,
     email,
   } = user;
 
   const fullAddress = `${address}, ${city}, ${country}, ${postalCode}`;
-
+  const history = useHistory();
   return (
     <section className="relative py-16 bg-gray-100">
       <div className="container max-w-7xl px-4 mx-auto">
@@ -41,33 +41,13 @@ const Content = ({ user }) => {
                 </div>
               </div>
               <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:self-center flex justify-center mt-10 lg:justify-end lg:mt-0">
-                <Button color="lightBlue" ripple="light">
+                <Button
+                  color="lightBlue"
+                  onClick={() => history.push("/settings")}
+                  ripple="light"
+                >
                   Edit
                 </Button>
-              </div>
-              <div className="w-full lg:w-4/12 px-4 lg:order-1">
-                <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                  <div className="mr-4 p-3 text-center">
-                    <span className="text-xl font-bold block uppercase tracking-wide text-gray-900">
-                      22
-                    </span>
-                    <span className="text-sm text-gray-700">Timesheets</span>
-                  </div>
-                  <div className="mr-4 p-3 text-center">
-                    <span className="text-xl font-bold block uppercase tracking-wide text-gray-900">
-                      10
-                    </span>
-                    <span className="text-sm text-gray-700">Requests</span>
-                  </div>
-                  <div className="lg:mr-4 p-3 text-center">
-                    <span className="text-xl font-bold block uppercase tracking-wide text-gray-900">
-                      9
-                    </span>
-                    <span className="text-sm text-gray-700">
-                      Days Available
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -79,15 +59,11 @@ const Content = ({ user }) => {
               </div>
               <div className="m-1 text-gray-700 font-medium flex items-center justify-center gap-2">
                 <Icon name="work" size="xl" />
-                {position} - {companyName}
+                {position} - EMS.ro
               </div>
               <div className="m-1 text-gray-700 font-medium flex items-center justify-center gap-2">
                 <Icon name="person" size="xl" />
-                Manager - {manager}
-              </div>
-              <div className="m-1 text-gray-700 font-medium flex items-center justify-center gap-2">
-                <Icon name="phone" size="xl" />
-                {phoneNumber}
+                Manager - Admin
               </div>
               <div className="m-1 text-gray-700 font-medium flex items-center justify-center gap-2">
                 <Icon name="mail" size="xl" />

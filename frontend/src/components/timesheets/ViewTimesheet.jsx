@@ -3,7 +3,7 @@
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { selectState, getTimesheetById } from "../../features/auth/authSlice";
+import { getProjects, selectState } from "../../features/auth/authSlice";
 import DefaultNavbar from "../DefaultNavbar";
 import DefaultFooter from "../DefaultFooter";
 import Header from "../profile/Header";
@@ -11,10 +11,22 @@ import Breadcrumb from "../shared/Breadcrumb";
 import LoadingContainer from "../shared/LoadingContainer";
 import EditTimesheet from "./EditTimesheet";
 import TimesheetDetails from "./TimesheetDetails";
+import {
+  getTimesheetById,
+  selectStateTimesheet,
+  updateTimesheet,
+} from "../../features/data/timesheetSlice";
+
+const STATUS = {
+  OPEN: "open",
+  SUBMITED: "submitted",
+  APPROVED: "approved",
+};
 
 const ViewTimesheet = () => {
   const { id = null } = useParams();
-  const { currentTimesheet = {} } = useSelector(selectState);
+  const { currentTimesheet = {} } = useSelector(selectStateTimesheet);
+  const { projects = [] } = useSelector(selectState);
   const dispatch = useDispatch();
 
   const [values, setValues] = useState({});
@@ -39,6 +51,7 @@ const ViewTimesheet = () => {
 
   useEffect(() => {
     dispatch(getTimesheetById(id));
+    dispatch(getProjects());
   }, [id]);
 
   useEffect(() => {
@@ -106,7 +119,7 @@ const ViewTimesheet = () => {
     _tempTasks.push({
       projectId: null,
       subtaskId: null,
-      days: ["", "", "", "", "", "", ""],
+      days: ["0", "0", "0", "0", "0", "0", "0"],
     });
 
     setValues({
@@ -138,7 +151,7 @@ const ViewTimesheet = () => {
     });
   };
 
-  const handleOnSelectSubtask = (rowIdx, { label }) => {
+  const handleOnSelectSubtask = (rowIdx, { name }) => {
     const {
       timesheet: { tasks },
     } = values;
@@ -146,7 +159,7 @@ const ViewTimesheet = () => {
     let _tempTasks = [...tasks];
     _tempTasks[Number(rowIdx)] = {
       ..._tempTasks[Number(rowIdx)],
-      subtaskId: label,
+      subtaskId: name,
     };
 
     setValues({
@@ -158,14 +171,28 @@ const ViewTimesheet = () => {
     });
   };
 
-  const handleOnSave = ({ submit }) => {
-    alert(submit ? "Save and submit" : "Only save for later");
+  const handleOnSave = ({ submit = false }) => {
+    const { id, ...otherObjects } = values.timesheet;
+    dispatch(
+      updateTimesheet({
+        id,
+        payload: {
+          ...otherObjects,
+          status: !submit ? STATUS.OPEN : STATUS.SUBMITED,
+        },
+      })
+    );
   };
 
-  const STATUS = {
-    OPEN: "open",
-    SUBMITED: "submitted",
-    APPROVED: "approved",
+  const handleApprove = (id) => {
+    dispatch(
+      updateTimesheet({
+        id,
+        payload: {
+          status: STATUS.APPROVED,
+        },
+      })
+    );
   };
 
   return (
@@ -190,16 +217,13 @@ const ViewTimesheet = () => {
                       onSelectProject={handleOnSelectProjectId}
                       onSelectSubtask={handleOnSelectSubtask}
                       onSave={handleOnSave}
+                      projects={projects}
                     />
                   ) : (
                     <TimesheetDetails
                       timesheet={values.timesheet}
-                      onChangeInput={handleOnChangeHourDay}
-                      onDeleteRow={handleDeleteRow}
-                      onAddRow={handleAddRow}
-                      onSelectProject={handleOnSelectProjectId}
-                      onSelectSubtask={handleOnSelectSubtask}
-                      onSave={handleOnSave}
+                      projects={projects}
+                      onApprove={handleApprove}
                     />
                   )}
                 </>

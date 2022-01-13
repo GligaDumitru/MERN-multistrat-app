@@ -20,7 +20,8 @@ export default function Profile() {
       </div>
       <main>
         <Header />
-        <Content />
+        {user && <Content user={user} />}
+        
       </main>
       <DefaultFooter />
     </>

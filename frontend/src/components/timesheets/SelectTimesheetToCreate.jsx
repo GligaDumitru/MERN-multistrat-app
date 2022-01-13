@@ -11,7 +11,7 @@ import DropdownItem from "@material-tailwind/react/DropdownItem";
 import { getMondays } from "../../utils";
 import InputIcon from "@material-tailwind/react/InputIcon";
 
-const SelectTimesheetToCreate = () => {
+const SelectTimesheetToCreate = ({ onCreate }) => {
   const [currentSelection, setCurrentSelection] = useState("");
 
   const mondays = getMondays().slice(0, 5);
@@ -75,6 +75,7 @@ const SelectTimesheetToCreate = () => {
               size="lg"
               ripple="dark"
               className="w-full"
+              onClick={() => onCreate(currentSelection)}
             >
               Create
             </Button>

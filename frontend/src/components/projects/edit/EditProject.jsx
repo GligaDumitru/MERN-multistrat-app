@@ -6,19 +6,23 @@ import Breadcrumb from "../../shared/Breadcrumb";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { selectState, getProjectById } from "../../../features/auth/authSlice";
-import Loader from "../../shared/Loader";
+import {
+  selectState,
+  getProjectById,
+  updateProject,
+} from "../../../features/auth/authSlice";
 import ViewProject from "../ViewProject";
 import EditProjectForm from "./EditProjectForm";
+import LoadingContainer from "../../shared/LoadingContainer";
 
 const EditProject = () => {
   const { id = null } = useParams();
-  const { currentProject = {}, loading } = useSelector(selectState);
+  const { currentProject = {} } = useSelector(selectState);
   const dispatch = useDispatch();
 
   const [values, setValues] = useState({
     id: "",
-    logoURL: "",
+    imageLink: "",
     name: "",
     description: "",
     manager: "",
@@ -57,6 +61,15 @@ const EditProject = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { id: idProject, manager, ...otherValues } = values;
+    dispatch(
+      updateProject({
+        id: idProject,
+        payload: {
+          ...otherValues,
+        },
+      })
+    );
   };
 
   const handleInputChange = (e) => {
@@ -81,9 +94,7 @@ const EditProject = () => {
       <Header />
       <div className="p-8 mx-auto">
         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-2xl -mt-80 min-h-screen">
-          {loading ? (
-            <Loader />
-          ) : (
+          <LoadingContainer>
             <div className="p-8">
               <Breadcrumb routes={routesBreadcrumb} />
               <div className="grid grid-cols-2 gap-4 mt-24">
@@ -100,7 +111,7 @@ const EditProject = () => {
                 </div>
               </div>
             </div>
-          )}
+          </LoadingContainer>
         </div>
       </div>
       <DefaultFooter />

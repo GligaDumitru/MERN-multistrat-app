@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
@@ -8,21 +9,41 @@ import Button from "@material-tailwind/react/Button";
 import Paragraph from "@material-tailwind/react/Paragraph";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  registerAsync,
+  createEmployee,
   selectState,
   setField,
 } from "../../features/auth/authSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "gpl-tailwind-theme";
+import Select from "../shared/Select";
+
+const ROLES = [
+  {
+    name: "user",
+  },
+  {
+    name: "admin",
+  },
+  {
+    name: "manager",
+  },
+];
 
 export default function AddPerson() {
+  const initialValues = {
+    name: "",
+    email: "",
+    password: "",
+    role: {
+      name: "user",
+    },
+  };
   const [values, setValues] = useState({
-    name: "admin",
-    email: "gligadumitru98@gmail.com",
-    password: "parola111",
+    ...initialValues,
   });
 
-  const { status, errors, message } = useSelector(selectState);
+  const { successMessage, errors, message, user, loading } =
+    useSelector(selectState);
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -34,14 +55,30 @@ export default function AddPerson() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email, password } = values;
-    dispatch(registerAsync({ name, email, password }));
+    const { name, email, password, role } = values;
+    dispatch(
+      createEmployee({
+        name,
+        role: role.name,
+        email,
+        password,
+        managedBy: user.id,
+      })
+    );
   };
+
+  useEffect(() => {
+    if (!loading && successMessage) {
+      setValues({
+        ...initialValues
+      });
+    }
+  }, [loading, successMessage]);
 
   return (
     <>
       <div className="absolute bottom-2 right-2">
-        {message && errors.length === 0 && (
+        {(message || errors.length > 0) && (
           <Alert
             color="red"
             icon="error"
@@ -49,30 +86,33 @@ export default function AddPerson() {
             iconPosition="center"
             closeIcon="close"
             closeIconPosition="center"
-            hideAfter={5000}
+            hideAfter={10000}
             className="fixed bottom-2 right-2 inline-block"
-            handleClose={() =>
-              dispatch(setField({ name: "message", value: "" }))
-            }
+            handleClose={() => {
+              dispatch(setField({ name: "message", value: "" }));
+              dispatch(setField({ name: "errors", value: [] }));
+            }}
           >
-            {`${message}`}
+            <span>
+              {message && message} {errors && errors.length > 0 && errors[0]}
+            </span>
           </Alert>
         )}
-        {errors && errors.length > 0 && (
+        {successMessage && (
           <Alert
-            color="red"
-            icon="error"
+            color="green"
+            icon="check"
             iconSize="xl"
             iconPosition="center"
             closeIcon="close"
             closeIconPosition="center"
-            hideAfter={5000}
+            hideAfter={10000}
             className="fixed bottom-2 right-2 inline-block"
-            handleClose={() =>
-              dispatch(setField({ name: "errors", value: [] }))
-            }
+            handleClose={() => {
+              dispatch(setField({ name: "successMessage", value: "" }));
+            }}
           >
-            {`${errors[0]}`}
+            <span>{successMessage}</span>
           </Alert>
         )}
       </div>
@@ -119,6 +159,14 @@ export default function AddPerson() {
                   onChange={handleInputChange}
                 />
               </div>
+              <div className="mb-10 px-4">
+                <span>Select Role</span>
+                <Select
+                  options={ROLES}
+                  selected={values.role}
+                  onSelect={(option) => setValues({ ...values, role: option })}
+                />
+              </div>
             </CardBody>
             <CardFooter>
               <div className="flex justify-center">
@@ -128,8 +176,9 @@ export default function AddPerson() {
                   size="lg"
                   ripple="dark"
                   type="submit"
+                  className="w-full"
                 >
-                  {status === "loading" ? "Loading" : "Create"}
+                  {loading === "loading" ? "Loading" : "Create"}
                 </Button>
               </div>
               <div className="mt-4 pt-2 border-t-2">

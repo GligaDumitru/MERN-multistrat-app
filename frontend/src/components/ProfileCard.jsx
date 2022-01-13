@@ -25,7 +25,7 @@ export default function ProfileCard(props) {
   return (
     <Card>
       <div className="flex flex-wrap justify-center">
-        <div className="w-48 px-4 -mt-24">
+        <div className="w-48 px-4 ">
           <Image src={imageLink} rounded raised />
         </div>
       </div>

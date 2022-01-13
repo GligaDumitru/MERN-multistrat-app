@@ -20,6 +20,8 @@ import Projects from "./pages/Projects";
 import EditProject from "./components/projects/edit/EditProject";
 import Timesheets from "./pages/Timesheets";
 import ViewTimesheet from "./components/timesheets/ViewTimesheet";
+import Requests from "./pages/Requests";
+import ViewRequest from "./components/requests/ViewRequest";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -34,6 +36,8 @@ const App = () => {
       <Route exact path="/people" component={People} />
       <Route exact path="/projects" component={Projects} />
       <Route exact path="/timesheets" component={Timesheets} />
+      <Route exact path="/requests" component={Requests} />
+      <Route exact path="/requests/:id" component={ViewRequest} />
       <Route exact path="/timesheets/:id" component={ViewTimesheet} />
       <Route exact path="/projects/:id" component={EditProject} />
       <Route exact path="/login" component={Login} />

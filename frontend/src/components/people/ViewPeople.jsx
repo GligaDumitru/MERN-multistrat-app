@@ -26,19 +26,20 @@ export default function ViewPeople() {
     <LayoutPage>
       <div className="p-8">
         <Breadcrumb routes={routesBreadcrumb} />
-        <div className="py-4 flex items-center">
-          <Button
-            color="blue"
-            ripple="light"
-            onClick={() => setShowModal(true)}
-          >
-            <Icon name="add" /> Add New Employee
-          </Button>
-        </div>
-        <Modal isOpen={showModal} handleClose={() => setShowModal(false)}>
-          <AddPerson />
-        </Modal>
-        <SearchPerson />
+        
+          <div className="py-4 flex items-center">
+            <Button
+              color="blue"
+              ripple="light"
+              onClick={() => setShowModal(true)}
+            >
+              <Icon name="add" /> Add New Employee
+            </Button>
+          </div>
+          <Modal isOpen={showModal} handleClose={() => setShowModal(false)}>
+            <AddPerson />
+          </Modal>
+          <SearchPerson />
       </div>
     </LayoutPage>
   );

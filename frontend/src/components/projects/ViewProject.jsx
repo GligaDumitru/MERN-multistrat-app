@@ -9,65 +9,75 @@ import CardBody from "@material-tailwind/react/CardBody";
 import Table from "../shared/Table";
 import { Link } from "react-router-dom";
 
-const ViewProject = (props) => {
-  const { id, logoURL, name, description, address, showOptions, subtasks } =
-    props;
-
-  return (
-    <section className="overflow-y-scroll">
-      <div className="container max-w-7xl mx-auto ">
-        <div className="">
-          <div className="px-6">
-            <div className="flex flex-wrap justify-center">
-              <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                <div className="relative">
-                  <div className="w-40">
-                    <Image src={logoURL} alt="Profile picture" raised rounded />
-                  </div>
+const ViewProject = ({
+  id,
+  imageLink,
+  name,
+  description,
+  address,
+  showOptions,
+  subtasks,
+  onDelete,
+}) => (
+  <section className="overflow-y-scroll">
+    <div className="container max-w-7xl mx-auto ">
+      <div className="">
+        <div className="px-6">
+          <div className="flex flex-wrap justify-center">
+            <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+              <div className="relative">
+                <div className="w-40">
+                  <Image src={imageLink} alt="Profile picture" raised rounded />
                 </div>
               </div>
-              {showOptions && (
-                <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:self-center flex justify-center mt-10 lg:justify-end lg:mt-0">
-                  <Link to={`/projects/${id}`}>
-                    <Button iconOnly rounded color="lightBlue" ripple="light">
-                      <Icon name="edit" />
-                    </Button>
-                  </Link>
-
-                  <Button
-                    iconOnly
-                    rounded
-                    className="ml-4"
-                    color="red"
-                    ripple="light"
-                  >
-                    <Icon name="delete" />
+            </div>
+            {showOptions && (
+              <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:self-center flex justify-center mt-10 lg:justify-end lg:mt-0">
+                <Link to={`/projects/${id}`}>
+                  <Button iconOnly rounded color="lightBlue" ripple="light">
+                    <Icon name="edit" />
                   </Button>
-                </div>
-              )}
-            </div>
-            <div className="text-center my-8">
-              <H3 color="lightBlue">{name}</H3>
-              <div className="mt-0 mb-2 text-gray-700 font-medium flex items-center justify-center gap-2">
-                <Icon name="place" size="xl" />
-                {address}
-              </div>
-            </div>
+                </Link>
 
-            <div className="mb-10 py-2 border-t border-gray-200 text-center">
-              <div className="flex flex-wrap justify-center">
-                <div className="w-full lg:w-9/12 px-4 flex flex-col items-center">
-                  <LeadText color="blueGray">{description}</LeadText>
-                </div>
+                <Button
+                  iconOnly
+                  rounded
+                  className="ml-4"
+                  color="red"
+                  ripple="light"
+                  onClick={() => onDelete(id)}
+                >
+                  <Icon name="delete" />
+                </Button>
+              </div>
+            )}
+          </div>
+          <div className="text-center my-8">
+            <H3 color="lightBlue">{name}</H3>
+            <div className="mt-0 mb-2 text-gray-700 font-medium flex items-center justify-center gap-2">
+              <Icon name="place" size="xl" />
+              {address}
+            </div>
+          </div>
+
+          <div className="mb-10 py-2 border-t border-gray-200 text-center">
+            <div className="flex flex-wrap justify-center">
+              <div className="w-full lg:w-9/12 px-4 flex flex-col items-center">
+                <LeadText color="blueGray">{description}</LeadText>
               </div>
             </div>
-            <Card>
-              <CardHeader color="blue" contentPosition="none">
-                <div className="w-full flex items-center justify-between">
-                  <h2 className="text-white text-2xl">Project Subtasks</h2>
-                </div>
-              </CardHeader>
-              <CardBody>
+          </div>
+          <Card>
+            <CardHeader color="blue" contentPosition="none">
+              <div className="w-full flex items-center justify-between">
+                <h2 className="text-white text-2xl">Project Subtasks</h2>
+              </div>
+            </CardHeader>
+            <CardBody>
+              {subtasks && subtasks.length === 0 && (
+                <div>No subtasks available</div>
+              )}
+              {subtasks && subtasks.length > 0 && (
                 <Table
                   headers={[
                     {
@@ -85,24 +95,24 @@ const ViewProject = (props) => {
                   ]}
                   rows={subtasks}
                 />
-              </CardBody>
-            </Card>
-          </div>
+              )}
+            </CardBody>
+          </Card>
         </div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 ViewProject.defaultProps = {
-  id: "123",
-  logoURL: "https://via.placeholder.com/350x350",
+  onDelete: () => undefined,
+  id: "",
+  imageLink: "https://via.placeholder.com/500",
   name: "Project Name",
-  address: "",
+  address: "Str.Street, Country",
   showOptions: true,
   subtasks: [],
-  description:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi natus laborum esse voluptates, dolorem unde. Ex illo ratione eveniet vel similique? Magni tenetur alias explicabo vel recusandae minus omnis!",
+  description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
 };
 
 export default ViewProject;

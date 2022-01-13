@@ -14,19 +14,6 @@ export default function LandingTeamCard({ img, name, position }) {
                     <Paragraph color="blueGray">{position}</Paragraph>
                     <div className="flex items-center justify-center">
                         <Button
-                            color="lightBlue"
-                            buttonType="link"
-                            ripple="dark"
-                            rounded
-                            iconOnly
-                        >
-                            <Icon
-                                family="font-awesome"
-                                name="fab fa-twitter"
-                                size="lg"
-                            />
-                        </Button>
-                        <Button
                             color="blue"
                             buttonType="link"
                             ripple="dark"
@@ -46,11 +33,7 @@ export default function LandingTeamCard({ img, name, position }) {
                             rounded
                             iconOnly
                         >
-                            <Icon
-                                family="font-awesome"
-                                name="fab fa-dribbble"
-                                size="lg"
-                            />
+                           <Icon family="font-awesome" name="fab fa-instagram" />
                         </Button>
                     </div>
                 </div>

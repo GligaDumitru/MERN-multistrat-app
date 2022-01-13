@@ -11,6 +11,9 @@ module.exports = {
       body: ["Roboto", "sans-serif"],
     },
     extend: {
+      spacing: {
+        '48': '12rem'
+      },
       maxHeight: {
         128: "32rem",
       },

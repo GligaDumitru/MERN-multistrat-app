@@ -1,14 +1,14 @@
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
-import { Button } from "gpl-tailwind-theme";
+import Button from "@material-tailwind/react/Button";
 import Input from "@material-tailwind/react/Input";
 import Textarea from "@material-tailwind/react/Textarea";
 import Icon from "@material-tailwind/react/Icon";
 
 const EditProjectForm = (props) => {
   const {
-    values: { name, logoURL, address, description, subtasks },
+    values: { name, imageLink, address, description, subtasks },
     handleSubmit,
     handleInputChange,
     handleChangeFieldByName,
@@ -20,7 +20,7 @@ const EditProjectForm = (props) => {
     let _tempArr = [...subtasks];
     _tempArr[idx] = {
       ..._tempArr[idx],
-      updatedAt: `${new Date().toISOString()}`,
+      updatedAt: new Date().toLocaleString(),
       name: value,
     };
     handleChangeFieldByName("subtasks", _tempArr);
@@ -30,8 +30,8 @@ const EditProjectForm = (props) => {
     let _tempArr = [...subtasks];
     _tempArr.push({
       name: "",
-      createdAt: `${new Date().toISOString()}`,
-      updatedAt: `${new Date().toISOString()}`,
+      createdAt: new Date().toLocaleString(),
+      updatedAt: new Date().toLocaleString(),
     });
     handleChangeFieldByName("subtasks", _tempArr);
   };
@@ -72,8 +72,8 @@ const EditProjectForm = (props) => {
                 type="text"
                 color="purple"
                 placeholder="Logo URL"
-                value={logoURL}
-                name="logoURL"
+                value={imageLink}
+                name="imageLink"
                 onChange={handleInputChange}
               />
             </div>
@@ -108,6 +108,7 @@ const EditProjectForm = (props) => {
               rounded={true}
               iconOnly={true}
               className="ml-4"
+              type="button"
               onClick={() => createNewEmptyTask()}
             >
               <Icon name="add" />
@@ -133,6 +134,7 @@ const EditProjectForm = (props) => {
                   ripple="light"
                   rounded={true}
                   iconOnly={true}
+                  type="button"
                   onClick={() => handleDeleteTask(index)}
                 >
                   <Icon name="delete" />
@@ -149,7 +151,7 @@ const EditProjectForm = (props) => {
 EditProjectForm.defaultProps = {
   values: {
     id: "",
-    logoURL: "",
+    imageLink: "",
     name: "",
     description: "",
     manager: "",

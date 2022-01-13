@@ -4,7 +4,11 @@ import CardBody from "@material-tailwind/react/CardBody";
 import Select from "../shared/Select";
 import { Button } from "gpl-tailwind-theme";
 import Icon from "@material-tailwind/react/Icon";
-import { add, getDay, getDate } from "date-fns";
+import {
+  calculateTotalHoursPerColumn,
+  DAYS,
+  generateDaysArr,
+} from "../../utils";
 
 const headers = [
   {
@@ -37,103 +41,8 @@ const headers = [
   },
 ];
 
-const projects = [
-  {
-    id: "11111",
-    name: "EMSOne",
-    subtasks: [
-      {
-        label: "frontend_development",
-        name: "Frontend Development",
-      },
-      {
-        label: "backend_development",
-        name: "Backend Development",
-      },
-      {
-        label: "testing_development",
-        name: "Testing Development",
-      },
-      {
-        label: "devops_development",
-        name: "Devops Development",
-      },
-    ],
-  },
-  {
-    id: "22222",
-    name: "Tinka Group",
-    subtasks: [
-      {
-        label: "frontend_development",
-        name: "Frontend Development",
-      },
-      {
-        label: "backend_development",
-        name: "Backend Development",
-      },
-      {
-        label: "testing_development",
-        name: "Testing Development",
-      },
-      {
-        label: "devops_development",
-        name: "Devops Development",
-      },
-    ],
-  },
-  {
-    id: "33333",
-    name: "Emag Fintech Group",
-    subtasks: [
-      {
-        label: "frontend_development",
-        name: "Frontend Development",
-      },
-      {
-        label: "backend_development",
-        name: "Backend Development",
-      },
-      {
-        label: "testing_development",
-        name: "Testing Development",
-      },
-      {
-        label: "devops_development",
-        name: "Devops Development",
-      },
-    ],
-  },
-];
-
-const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-const generateDaysArr = (startDate) => {
-  return days.map((_, index) => {
-    const currentDay = add(new Date(startDate), { days: index });
-    return {
-      day: getDay(currentDay),
-      date: getDate(currentDay),
-    };
-  });
-};
-
-const calculateTotalHoursPerColumn = (tasks) => {
-  if (!tasks || tasks <= 0) return [];
-  return tasks.reduce((acc, task) => {
-    const { days } = task;
-    days.forEach((day, index) => {
-      if (acc[index]) {
-        acc[index] += Number(day);
-      } else {
-        acc.push(Number(day));
-      }
-    });
-    return acc;
-  }, []);
-};
-
 const EditTimesheet = ({
+  projects,
   timesheet,
   onChangeInput,
   onAddRow,
@@ -143,7 +52,7 @@ const EditTimesheet = ({
   onSave,
 }) => {
   const { startDate, tasks, status } = timesheet;
-  const daysForTimesheetHeader = generateDaysArr(startDate);
+  const daysForTimesheetHeader = generateDaysArr(startDate, DAYS);
   const totalHoursPerColumn = calculateTotalHoursPerColumn(tasks);
 
   const getSumArr = (arr) => arr.reduce((a, b) => a + Number(b), 0);
@@ -186,7 +95,7 @@ const EditTimesheet = ({
                           scope="col"
                           className="px-1 py-3 text-center text-xs font-medium text-blue-500 uppercase"
                         >
-                          {`${date} ${days[day]}`}
+                          {`${date} ${DAYS[day]}`}
                         </th>
                       ))}
 
@@ -251,7 +160,7 @@ const EditTimesheet = ({
                                         "id",
                                         projectId
                                       ).subtasks,
-                                      "label",
+                                      "name",
                                       subtaskId
                                     )
                                   : { name: "Select..." }

@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
-import Select from "../shared/Select";
+import { add, getDay, getDate } from "date-fns";
 import { Button } from "gpl-tailwind-theme";
 import Icon from "@material-tailwind/react/Icon";
-import { add, getDay, getDate } from "date-fns";
 
 const headers = [
   {
@@ -37,75 +36,6 @@ const headers = [
   },
 ];
 
-const projects = [
-  {
-    id: "11111",
-    name: "EMSOne",
-    subtasks: [
-      {
-        label: "frontend_development",
-        name: "Frontend Development",
-      },
-      {
-        label: "backend_development",
-        name: "Backend Development",
-      },
-      {
-        label: "testing_development",
-        name: "Testing Development",
-      },
-      {
-        label: "devops_development",
-        name: "Devops Development",
-      },
-    ],
-  },
-  {
-    id: "22222",
-    name: "Tinka Group",
-    subtasks: [
-      {
-        label: "frontend_development",
-        name: "Frontend Development",
-      },
-      {
-        label: "backend_development",
-        name: "Backend Development",
-      },
-      {
-        label: "testing_development",
-        name: "Testing Development",
-      },
-      {
-        label: "devops_development",
-        name: "Devops Development",
-      },
-    ],
-  },
-  {
-    id: "33333",
-    name: "Emag Fintech Group",
-    subtasks: [
-      {
-        label: "frontend_development",
-        name: "Frontend Development",
-      },
-      {
-        label: "backend_development",
-        name: "Backend Development",
-      },
-      {
-        label: "testing_development",
-        name: "Testing Development",
-      },
-      {
-        label: "devops_development",
-        name: "Devops Development",
-      },
-    ],
-  },
-];
-
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const generateDaysArr = (startDate) => {
@@ -133,16 +63,8 @@ const calculateTotalHoursPerColumn = (tasks) => {
   }, []);
 };
 
-const TimesheetDetails = ({
-  timesheet,
-  onChangeInput,
-  onAddRow,
-  onDeleteRow,
-  onSelectProject,
-  onSelectSubtask,
-  onSave,
-}) => {
-  const { startDate, tasks, status } = timesheet;
+const TimesheetDetails = ({ timesheet, projects, onApprove }) => {
+  const { startDate, tasks, status, id } = timesheet;
   const daysForTimesheetHeader = generateDaysArr(startDate);
   const totalHoursPerColumn = calculateTotalHoursPerColumn(tasks);
 
@@ -196,6 +118,10 @@ const TimesheetDetails = ({
                       >
                         Total
                       </th>
+                      <th
+                        scope="col"
+                        className="px-1 py-3 text-center text-xs font-medium text-gray-500 uppercase"
+                      ></th>
                     </tr>
                   </thead>
                   <tbody className="bg-white">
@@ -229,7 +155,7 @@ const TimesheetDetails = ({
                                       "id",
                                       projectId
                                     ).subtasks,
-                                    "label",
+                                    "name",
                                     subtaskId
                                   ).name
                                 : "-"}
@@ -246,6 +172,9 @@ const TimesheetDetails = ({
                           ))}
                           <td className="px-1 py-4 text-center">
                             <span>{getSumArr(daysForTask)}h</span>
+                          </td>
+                          <td className="px-1 py-4 text-center">
+                            <span> </span>
                           </td>
                         </tr>
                       )
@@ -279,6 +208,23 @@ const TimesheetDetails = ({
                       >
                         <span>{totalHours}h</span>
                       </th>
+
+                      <th
+                        scope="col"
+                        className="px-1 py-3 text-center  font-medium text-dark"
+                      >
+                        <Button
+                          color="green"
+                          ripple="light"
+                          rounded={true}
+                          iconOnly={true}
+                          className="m-0 p-1 h-8 w-8"
+                          title="Approve Timesheet"
+                          onClick={() => onApprove(id)}
+                        >
+                          <Icon name="send" />
+                        </Button>
+                      </th>
                     </tr>
                   </thead>
                 </table>
@@ -292,12 +238,6 @@ const TimesheetDetails = ({
 };
 
 TimesheetDetails.defaultProps = {
-  onChangeInput: () => undefined,
-  onAddRow: () => undefined,
-  onDeleteRow: () => undefined,
-  onSelectProject: () => undefined,
-  onSelectSubtask: () => undefined,
-  onSave: () => undefined,
   timesheet: {
     startDate: new Date(2022, 0, 17),
     tasks: [],
