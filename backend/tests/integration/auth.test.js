@@ -46,6 +46,14 @@ describe("Auth routes", () => {
         email: newUser.email,
         role: "user",
         isEmailVerified: false,
+        address: "-",
+        city: "-",
+        country: "-",
+        description: "-",
+        imageLink: "https://via.placeholder.com/150",
+        managedBy: null,
+        position: "employee",
+        postalCode: "-",
       });
 
       const dbUser = await User.findById(res.body.user.id);
@@ -127,6 +135,14 @@ describe("Auth routes", () => {
         email: userOne.email,
         role: userOne.role,
         isEmailVerified: userOne.isEmailVerified,
+        address: "-",
+        city: "-",
+        country: "-",
+        description: "-",
+        imageLink: "https://via.placeholder.com/150",
+        managedBy: null,
+        position: "employee",
+        postalCode: "-",
       });
 
       expect(res.body.tokens).toEqual({
@@ -144,11 +160,12 @@ describe("Auth routes", () => {
       const res = await request(app)
         .post("/v1/auth/login")
         .send(loginCredentials)
-        .expect(httpStatus.UNAUTHORIZED);
+        .expect(httpStatus.BAD_REQUEST);
 
       expect(res.body).toEqual({
-        code: httpStatus.UNAUTHORIZED,
-        message: httpStatus[httpStatus.UNAUTHORIZED],
+        code: httpStatus.BAD_REQUEST,
+        message: httpStatus[httpStatus.BAD_REQUEST],
+        errors: ["Email or password incorrect"],
       });
     });
 
@@ -162,11 +179,12 @@ describe("Auth routes", () => {
       const res = await request(app)
         .post("/v1/auth/login")
         .send(loginCredentials)
-        .expect(httpStatus.UNAUTHORIZED);
+        .expect(httpStatus.BAD_REQUEST);
 
       expect(res.body).toEqual({
-        code: httpStatus.UNAUTHORIZED,
-        message: httpStatus[httpStatus.UNAUTHORIZED],
+        code: httpStatus.BAD_REQUEST,
+        message: httpStatus[httpStatus.BAD_REQUEST],
+        errors: ["Email or password incorrect"],
       });
     });
   });
@@ -465,7 +483,7 @@ describe("Auth routes", () => {
         .post("/v1/auth/reset-password")
         .query({ token: refreshToken })
         .send({ password: "parolano8" })
-        .expect(httpStatus.UNAUTHORIZED);
+        .expect(httpStatus.BAD_REQUEST);
     });
     test("should return error is the password is not valid", async () => {
       await insertUsers([userOne]);
@@ -797,7 +815,7 @@ describe("Auth middleware", () => {
     });
     const next = jest.fn();
 
-    await auth("anyRight")(req, httpMocks.createResponse(), next);
+    await auth()(req, httpMocks.createResponse(), next);
 
     expect(next).toHaveBeenCalledWith();
   });
